@@ -112,3 +112,25 @@ Rails.application.routes.draw do
 end
 ```
 ------------------------------------------------------
+![rake routes](https://cloud.githubusercontent.com/assets/10654877/7611863/7d4ec9bc-f987-11e4-9bd6-5a72542cc266.jpg)
+
+
+Création du controller Cocktail
+```
+rails g controller cocktails index show new create
+```
+### Controlleur(new dans cocktail) ###
+```ruby
+def new
+ @cocktail = Cocktail.new
+end
+```
+On crée un objet Cocktail qui va nous permettre de construire le formulaire
+
+### View(new dans cocktail) ###
+```ruby
+<%= form_for @cocktail do |f| %>
+  <%= f.text_field :name %>
+  <%= f.submit %>
+<% end %>
+```
