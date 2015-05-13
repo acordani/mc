@@ -76,3 +76,39 @@ class Dose < ActiveRecord::Base
 end
 ```
 
+```validates_uniqueness_of : cocktail, scope: :ingredient``` Permet de valider l'ingredient uniquement si il est unique dans le cocktail. On ne peut pas mettre 2 fois le même ingredient dans le cocktail.
+
+###Routing###
+
+Here is the list of features:
+- A user can see the list of all cocktails. 
+```
+index de cocktail - GET "cocktails"
+```
+- A user can see the details of a given cocktail, with the ingredient list.
+```
+show de cocktail - GET "cocktails/42"
+```
+- A user can create a new cocktail. 
+```
+new et create cocktail - GET "cocktails/new" et POST "cocktails"
+```
+
+- A user can add a new dose (ingredient/description pair) on an existing cocktail.
+```
+new et create de dose - GET "cocktails/42/doses/new" et POST "cocktails/42/doses"
+```
+- A user can delete a dose on an existing cocktail.
+```
+destroy de dose - DELETE "doses/25"
+```
+-----------------------------------------------------
+```ruby
+Rails.application.routes.draw do
+  resources :cocktails, only: [:index,:new, :show, :create] do
+    resources :doses, only: [:new, :create]
+  end
+  resources :doses,only: [:destroy]
+end
+```
+------------------------------------------------------
