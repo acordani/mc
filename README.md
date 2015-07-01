@@ -134,3 +134,6 @@ On crée un objet Cocktail qui va nous permettre de construire le formulaire
   <%= f.submit %>
 <% end %>
 ```
+```
+rails generate migration RemoveFieldNameFromTableName field_name:datatype
+```
