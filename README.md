@@ -138,7 +138,7 @@ def new
  @cocktail = Cocktail.new
 end
 ```
-On crée un objet Cocktail qui va nous permettre de construire le formulaire
+On crée un objet Cocktail(une instance de la class cocktail avec aucune information) vide (sans information (sans id, sans name) qui va nous permettre de construire le formulaire
 
 ### View(new dans cocktail) ###
 ```ruby
@@ -147,6 +147,87 @@ On crée un objet Cocktail qui va nous permettre de construire le formulaire
   <%= f.submit %>
 <% end %>
 ```
+```ruby
+<%= simple_form_for @cocktail do |f| %>
+  <%= f.text_field :name %>
+  <%= f.submit %>
+<% end %>
+```
+
+la ligne: <%= simple_form_for @cocktail do |f| %> va servir a génerer la balise form
+les lignes qu'on écrit apres, vont generer les input qu'on met dedans
+
+Il va en plus grace à @cocktail mettre la bonne URL
+Comment le fait il?
+En 2 étapes:
+- il voit qu'on a @cocktail. Et @cocktail contient Cocktail.new. Qui elle meme est une instance de la class Cocktail
+- Et donc il fait @cocktail.class => Qui retourne la chaine de caractère "Cocktail"
+- Ensuite, il fait @cocktail.class.downcase => Ce qui fait "cocktail"
+- Puis il fait @cocktail.class.downcase.pluralize => Il se retrouve donc avec "cocktails"
+- Dc il a maintenant "cochtails" et il rajoute la chaine de caractere "_path"
+
+Mettre image cocktails_path
+
+Ensuite on doit se demander si il doit faire un get ou un post?
+
+Il regarde si il y a un id. Si il ya un id, cela veut dire qu'on recupere quelquechose qui existe dejà.
+Si il n'ya pas d'id, cela veut dire qu'on veux créer quelquechose, et dc il fait un Post
+
+Les champs qui viennent en input proviennent forcement du schema de la bdd.
+
+Lorsqu'on va appuyer sur le bouton submit, cela va renvoyer à l'action create du Controller Cocktail
+```ruby
+def create
+    @cocktail = Cocktail.create(cocktail_params)
+
+    redirect_to cocktail_path(@cocktail)
+  end
+```
+Je redirige vers cocktail_path qui est la route pour acceder à la show view.
+L'argument @cocktail qui veint apres le cocktail_path est remplacé par un id.
+Il y a une autre synthaxe qui est : ``` redirect_to cocktail_path({id: @cocktail.id})  ```
+On lui dit vraiment dans cocktail_path, je veux que tu remplaces la partie id par cocktail.id
+
+Cocktail_params Kesako ??
+
+```ruby
+  def cocktail_params
+    params.require(:cocktail).permit(:name)
+  end
+```
+si on met un raise dans le create pour créer une erreur, on se rend compte en écrivant params ds la console, que ca va afficher plein de trucs:
+image params
+
+Ce qui nous interesse c'est cocktail avec la clé name.
+Tout le reste, UTF8, authenticity token,... ne nous interesse pas
+
+require cocktail, veux dire que ds le grand hash, on ne veut que la partie avec la clé cocktail
+Et à l'interieur de la clé cocktail, il autorise les champs (.permit(:name) name.
+
+### Controlleur(show dans cocktail) ###
+```ruby
+def show
+    @cocktail = Cocktail.find(params[:id])
+end
+```
+pourquoi params[:id] car ds la route, il y a bien un param qui s'appelle id
+
+### View(index dans cocktail) ###
+```ruby
+<h2><%= @cocktail.name %></h2>
+
+<ul>
+<% @cocktail.doses.each do |dose| %>
+  <li>
+    <%= dose.description %> - <%= dose.ingredient.name %> - <%= link_to '(delete)', cocktail_dose_path(@cocktail, dose), method: :delete %>
+  </li>
+<% end %>
+</ul>
+<p>
+  <%= link_to "Ajouter une dose", new_cocktail_dose_path(@cocktail) %>
+</p>
+```
+
 ```
 rails generate migration RemoveFieldNameFromTableName field_name:datatype
 ```
@@ -187,3 +268,18 @@ def new
  @cocktails = Cocktail.all
 end
 ```
+
+### View(index dans cocktail) ###
+```ruby
+<h1>Voici la liste des cocktails</h1>
+
+<ul class="list">
+  <% @cocktails.each do |cocktail| %>
+    <li><%= cocktail.name %></li>
+  <% end %>
+</ul>
+<%= link_to "Ajoutez un cocktail" , new_cocktail_path %>
+```
+
+@cocktails est un tableau et donc each va me permettrede parcourir le tableau et pour chaque cocktail d'afficher son nom.
+le link_to va me permettre de créer un lien qui m'amenera à la page de création d'un nouveau cocktail.
