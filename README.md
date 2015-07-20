@@ -196,7 +196,8 @@ Cocktail_params Kesako ??
   end
 ```
 si on met un raise dans le create pour créer une erreur, on se rend compte en écrivant params ds la console, que ca va afficher plein de trucs:
-image params
+
+![params](https://cloud.githubusercontent.com/assets/10654877/8779243/b57b3fd6-2f02-11e5-9602-209dec35f7a7.jpg)
 
 Ce qui nous interesse c'est cocktail avec la clé name.
 Tout le reste, UTF8, authenticity token,... ne nous interesse pas
