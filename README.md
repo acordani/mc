@@ -164,9 +164,9 @@ En 2 étapes:
 - Et donc il fait @cocktail.class => Qui retourne la chaine de caractère "Cocktail"
 - Ensuite, il fait @cocktail.class.downcase => Ce qui fait "cocktail"
 - Puis il fait @cocktail.class.downcase.pluralize => Il se retrouve donc avec "cocktails"
-- Dc il a maintenant "cochtails" et il rajoute la chaine de caractere "_path"
+- Dc il a maintenant "cocktails" et il rajoute la chaine de caractere "_path"
 
-Mettre image cocktails_path
+![cocktails_path](https://cloud.githubusercontent.com/assets/10654877/8779309/155beafe-2f03-11e5-8962-211150642b47.jpg)
 
 Ensuite on doit se demander si il doit faire un get ou un post?
 
