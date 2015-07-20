@@ -212,6 +212,9 @@ def show
 end
 ```
 pourquoi params[:id] car ds la route, il y a bien un param qui s'appelle id
+```
+show de cocktail -  cocktail/:id -- GET "cocktails/42"
+```
 
 ### View(index dans cocktail) ###
 ```ruby
@@ -228,6 +231,104 @@ pourquoi params[:id] car ds la route, il y a bien un param qui s'appelle id
   <%= link_to "Ajouter une dose", new_cocktail_dose_path(@cocktail) %>
 </p>
 ```
+pour le link_to, on ajoute ) new_cocktail_dose_path un arguement qui est (@cocktail).
+@cocktail correspond à l'id du cocktail.
+On pourrait l'écrire comme ca: 
+```new_cocktail_dose_path({ cocktail_id:@cocktail.id})```
+
+Maintenant on va créer le controller dose
+```rails g controller Doses new```
+On ajoute le create a la main dans le controller car sinon, rails va créer le fichier de view de create et on n'en ne veut pas!!
+
+### Controlleur(new dans dose) ###
+```ruby
+def new
+ @doses = Dose.new
+ @ingredienst = Ingredient.all
+end
+```
+
+### View(new dans dose) ###
+```ruby
+<h1>Ajouter une dose</h1>
+
+<%= simple_form_for [@cocktail, @dose] do |f| %>
+  <%= f.input :description %>
+  <%= f.input :ingredient_id, as: :select, collection: @ingredients %>
+  <%= f.submit %>
+<% end %>
+
+```
+on a besoin des 2 arguments dans le simple_form car on veut comme url cocktail_doses_path
+
+image routes
+
+On va donc lui passer un tableau avec @cocktail et @dose.
+
+Ensuite on input, on mettra description et ingredient_id car ds le schéma dose, c'est ce qu'on a . Ca doit absolument correspondre au schéma.
+
+image ingredient_id
+Le probleme est que cela ns donne un input avec un choix en chiffre et il faut mettre l'id de l'ingredient et ns on veut qu'il nous propose les differents ingredients.
+D'abord, on veut un dropdown donc pour avoir un dropdown, on va mettee as: :select
+Pour avoir la liste des ingredients, il faut qu'on lui passe une collection, collection: Ingredient.all
+
+Attention: ca fonctionnne car on avait un .name, simple_form utilise les .name pour générer ses selects
+Et la plupart du temps, au lieu de mettre Ingredient.all, on met @ingredients
+et ds le controller, on met : @ingredients = Ingredient.all
+
+Pourquoi ? Car il faut eviter de faire des requetes SQL ds les views. On les fait ds les controllers
+
+
+### Controlleur(create dans dose) ###
+```ruby
+def create
+    @cocktail = Cocktail.find(params[:cocktail_id])
+    @dose = @cocktail.doses.new(doses_params)
+    if @dose.save
+      redirect_to cocktail_path(@cocktail)
+    else
+      render :new
+    end
+  end
+```
+la fonction ```.build``` n'a aucune difference avec la fonction ```.new```
+C'est un mot different pour signifier la meme chose.
+On fait ```@cocktail.doses``` car dans le model cocktail, on a ```has_many :doses```
+
+image model cocktail
+
+C'est ce ```has_many :doses``` qui nous permet de faire un ```cocktail.doses```
+
+### View(show dans cocktail) ###
+```ruby
+<<h2><%= @cocktail.name %></h2>
+
+<ul>
+<% @cocktail.doses.each do |dose| %>
+  <li>
+    <%= dose.description %> - <%= dose.ingredient.name %> - <%= link_to '(delete)', cocktail_dose_path(@cocktail, dose), method: :delete %>
+  </li>
+<% end %>
+</ul>
+<p>
+  <%= link_to "Ajouter une dose", new_cocktail_dose_path(@cocktail) %>
+</p>
+
+```
+On peut faire un dose.ingredient.name car dans le model dose, il y a un belongs_to :ingredient
+C'est uniquement pour ca. Si on retire la ligne belongs_to :ingredient dans le model, la methode .ingredient ne fonctionnera plus
+
+### Controlleur(destroy dans dose) ###
+```ruby
+def destroy
+    @dose = Dose.find(params[:id])
+    @dose.destroy
+
+    redirect_to :back
+  end
+```
+redirect_to :back, permet de revenir à la page d'avant.
+
 
 ```
 rails generate migration RemoveFieldNameFromTableName field_name:datatype
