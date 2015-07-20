@@ -1,5 +1,11 @@
 # Mister Cocktail du wagon
 
+## REMEMBER THE CONVENTION:
+
+- Table name: lower_snake_case, plural form (store several rows).
+- Model class name: UpperCamelCase, singular form (mapped to 1 row)
+- Rails is full of Convention over Configuration.
+
 ## Go to db.lewagon.org and draw the schema with your buddy. The tables we need are cocktails, ingredients and doses.
 
 ### Attributes ###
@@ -35,6 +41,8 @@ rake db:migrate
 ### Associations ###
 - A cocktail has many doses
 - A cocktail has many ingredients through doses
+(Un cocktail a plusieurs ingredients au travers de doses, comme on peut le voir sur le schema:
+![mc3](https://cloud.githubusercontent.com/assets/10654877/7607993/4df78990-f966-11e4-9f91-818f2dfcd07e.jpg)
 - An ingredient has many doses
 - A dose belongs to an ingredient
 - A dose belongs to a cocktail
@@ -60,6 +68,7 @@ end
 class Ingredient < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   has_many :doses
+  has_many :cocktails, through: :doses
 end
 ```
 ####dose.rb####
@@ -77,6 +86,8 @@ end
 ```
 
 ```validates_uniqueness_of : cocktail, scope: :ingredient``` Permet de valider l'ingredient uniquement si il est unique dans le cocktail. On ne peut pas mettre 2 fois le même ingredient dans le cocktail.
+L'ordre n'a pas d'importance. on peut remplacer cocktail par ingredient.
+C'est une syntaxe particulière mais c'est comme ça ;-)
 
 ###Routing###
 
@@ -105,6 +116,7 @@ destroy de dose - DELETE "doses/25"
 -----------------------------------------------------
 ```ruby
 Rails.application.routes.draw do
+  root_to: 'cocktails#index'
   resources :cocktails, only: [:index,:new, :show, :create] do
     resources :doses, only: [:new, :create]
   end
@@ -114,6 +126,7 @@ end
 ------------------------------------------------------
 ![rake routes](https://cloud.githubusercontent.com/assets/10654877/7611863/7d4ec9bc-f987-11e4-9bd6-5a72542cc266.jpg)
 
+root_to: 'cocktails#index' va permettre à la root / de renvoyer à l'action index du controller cocktail
 
 Création du controller Cocktail
 ```
@@ -136,4 +149,41 @@ On crée un objet Cocktail qui va nous permettre de construire le formulaire
 ```
 ```
 rails generate migration RemoveFieldNameFromTableName field_name:datatype
+```
+### Seed
+```ruby
+Ingredient.create(name:'lemon')
+Ingredient.create(name:'salt')
+Ingredient.create(name:'ice')
+Ingredient.create(name:'sugar')
+Ingredient.create(name:'mint')
+Ingredient.create(name:'vodka')
+Ingredient.create(name:'rhum')
+```
+
+```
+rake db:seed
+```
+Pour verifier si les ingredients sont bien ds la base de donnée, on fait dans la console:
+```
+Ingredient.all
+```
+Il faut maintenant faire les controllers et les actions au fur et à mesure
+Créer un cocktail et afficher la liste des cocktails
+
+rails g controller Cocktails index new create
+
+On va dans rails console et on crée un nouveau cocktail
+
+Cocktail.create( name:"Mojito" )
+Cocktail.create( name:"Blody Mary" )
+
+Cocktail.all => nous affiche les instances des 2 cocktails
+
+
+### Controlleur(index dans cocktail) ###
+```ruby
+def new
+ @cocktails = Cocktail.all
+end
 ```
