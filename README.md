@@ -261,13 +261,14 @@ end
 ```
 on a besoin des 2 arguments dans le simple_form car on veut comme url cocktail_doses_path
 
-image routes
+![routes](https://cloud.githubusercontent.com/assets/10654877/8869516/d125b718-31e4-11e5-82c2-8fc71e2d8bf4.jpg)
 
 On va donc lui passer un tableau avec @cocktail et @dose.
 
-Ensuite on input, on mettra description et ingredient_id car ds le schéma dose, c'est ce qu'on a . Ca doit absolument correspondre au schéma.
+Ensuite dans input, on mettra description et ingredient_id car ds le schéma dose, c'est ce qu'on a . Ca doit absolument correspondre au schéma.
 
-image ingredient_id
+![ingredient_id](https://cloud.githubusercontent.com/assets/10654877/8869537/2bd6a9ec-31e5-11e5-8fd5-35f2276d7151.jpg)
+
 Le probleme est que cela ns donne un input avec un choix en chiffre et il faut mettre l'id de l'ingredient et ns on veut qu'il nous propose les differents ingredients.
 D'abord, on veut un dropdown donc pour avoir un dropdown, on va mettee as: :select
 Pour avoir la liste des ingredients, il faut qu'on lui passe une collection, collection: Ingredient.all
@@ -295,7 +296,8 @@ la fonction ```.build``` n'a aucune difference avec la fonction ```.new```
 C'est un mot different pour signifier la meme chose.
 On fait ```@cocktail.doses``` car dans le model cocktail, on a ```has_many :doses```
 
-image model cocktail
+![model cocktail](https://cloud.githubusercontent.com/assets/10654877/8869567/8ac67d7e-31e5-11e5-8262-8652d322efa8.jpg)
+
 
 C'est ce ```has_many :doses``` qui nous permet de faire un ```cocktail.doses```
 
