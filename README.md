@@ -95,19 +95,25 @@ Here is the list of features:
 - A user can see the list of all cocktails. 
 ```
 index de cocktail - GET "cocktails"
+get 'cocktails' => "cocktails#index"
 ```
 - A user can see the details of a given cocktail, with the ingredient list.
 ```
 show de cocktail - GET "cocktails/42"
+get 'cocktails/:id' => "cocktails#show"
 ```
 - A user can create a new cocktail. 
 ```
 new et create cocktail - GET "cocktails/new" et POST "cocktails"
+get 'cocktails/new' => "cocktails#new"
+post 'cocktails' => "cocktail#create"
 ```
 
 - A user can add a new dose (ingredient/description pair) on an existing cocktail.
 ```
 new et create de dose - GET "cocktails/42/doses/new" et POST "cocktails/42/doses"
+get 'cocktails/:cocktail_id/doses/new' =>"doses/new"
+post '
 ```
 - A user can delete a dose on an existing cocktail.
 ```
