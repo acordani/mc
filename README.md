@@ -61,6 +61,9 @@ class Cocktail < ActiveRecord::Base
 
 end
 ```
+```has_many :ingredients, through: :doses``` C'est un racourci. On n'est pas obligé de le mettre mais ca va permettre d'avoir une methode d'instance cocktail.ingredients. On va pouvoir tous les ingredients d'un cocktail en passant par les doses.
+
+Par exemple, ca va nous permettre de faire mojito.ingredients. Ca nous donnera tous les ingredients du mojito
 
 ####ingredient.rb####
 ---------------------
@@ -71,6 +74,15 @@ class Ingredient < ActiveRecord::Base
   has_many :cocktails, through: :doses
 end
 ```
+
+```has_many :cocktails, through: :doses``` C'est un racourci. On n'est pas obligé de le mettre mais ca va permettre d'avoir une methode d'instance ingredients.cocktails. On va pouvoir tous les cocktails ayant un ingredient en passant par les doses.
+
+Par exemple, ca va nous permettre de faire vodka.cocktailss. Ca nous donnera tous les cocktails avec de la vodka.
+
+Sinon, on serait obligé de faire vodka.dose et pour chacune des doses, on regardera quel est l'ingredient associé.
+
+C'est juste une methode raccourci pour atteindre directement les ingredients.
+
 ####dose.rb####
 ---------------------
 ```ruby
@@ -88,6 +100,62 @@ end
 ```validates_uniqueness_of : cocktail, scope: :ingredient``` Permet de valider l'ingredient uniquement si il est unique dans le cocktail. On ne peut pas mettre 2 fois le même ingredient dans le cocktail.
 L'ordre n'a pas d'importance. on peut remplacer cocktail par ingredient.
 C'est une syntaxe particulière mais c'est comme ça ;-)
+
+
+###Crash Test###
+
+On va regarder quel est le premier cocktail de la base ```Cocktail.first```.
+
+Ca nous donne l'objet Cocktail, qu'on va mettre ds une variable. ```old = Cocktail.first```
+
+On va aussi récuperer le premier ingredient ```Ingredient.first```
+
+Ca ns donne l'objet Ingredient, qu'on met dans une variable ```lemon = Ingredient.first```
+
+On va donc crash-tester les doses
+
+Commencons par tester les validations:
+
+```dose = Dose.new```
+```dose.valid?``` => false Ensuite, le dose.valid, nous permet de savoir si c'est valide. La reponse est non
+
+Pourquoi?
+
+
+``` dose.errors.full_messages ```
+
+Et ca nous donne les reponses: ```Description can't be blank, Cocktail can't be blank et Ingredient can't be blank```
+
+On commence par lui donner une description
+```dose.description = "beaucoup"```
+
+Puis le Cocktail
+``` dose.cocktail = old ```
+
+Puis l'ingredient
+```dose.ingredient = lemon```
+
+Ensuite on faite ```dose.valid?``` => true
+ Et donc ```dose.save```
+ 
+ Puis, on va par tester les validations:
+ Cocktails has_many doses
+ Maintenant si tt marche, on peut faire ```old.doses``` et on va retrouver un tableau avec qu'une seule dose qui est "beaucoup". On va retrouver depuis le cocktail, les doses associées.
+ Ingredients has_many doses
+ Et si on prend ```lemon.doses```, on va retrouver la meme.
+ 
+ Cocktail has_many ingredients through doses
+ ``` old.ingredients ```
+ => On recupere un tableau avec un seul element qui est le citron
+ 
+ Ingredients has_many cocktails through doses
+ ``` lemon.cocktails ```
+ => On recupere un tableau avec un seul element qui est le cocktail Old
+ 
+ 
+ 
+
+
 
 ###Routing###
 
