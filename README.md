@@ -301,7 +301,11 @@ Ce qui nous interesse c'est cocktail avec la clé name.
 Tout le reste, UTF8, authenticity token,... ne nous interesse pas
 
 require cocktail, veux dire que ds le grand hash, on ne veut que la partie avec la clé cocktail
-Et à l'interieur de la clé cocktail, il autorise les champs (.permit(:name) name.
+Et à l'interieur de la clé cocktail, il autorise le champs (.permit(:name)) name.
+
+En faite, le ```Cocktail.create(cocktail_params)```, c'est la même chose lorsqu'on veut crashtester un model ds la console. On va faire mojito = Cocktail.create(name:"mojito",...).
+
+Il fait ecxactement la meme chose en prenant les strongs parameters (cocktail_params)
 
 ### Controlleur(show dans cocktail) ###
 ```ruby
