@@ -1,5 +1,11 @@
 <h1>Cocktails#new</h1>
-<%= form_for @cocktail do |f| %>
-  <%= f.text_field :name %>
-  <%= f.submit %>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+<%= simple_form_for @cocktail do |f| %>
+  <%= f.input :name %>
+  <%= f.button :submit, class: "btn btn-primary"%>
 <% end %>
+</div>
+</div>
+</div>
