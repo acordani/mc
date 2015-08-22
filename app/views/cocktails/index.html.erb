@@ -3,7 +3,7 @@
 
 <% @cocktails.each do |cocktail| %>
   <p><%= cocktail.name %>
-  <%= link_to "En savoir plus", cocktail_path(cocktail) %>
+  <%= link_to "En savoir plus", cocktail_path(cocktail.id) %>
   <!-- ici on injecte le cocktail.id dans cocktail.path car dans l'URL du show, il besoin de l'id du cocktail pour se construire -->
   <!-- on peut mettre id: cocktail.id, ou cocktail.id ou cocktail -->
 <% end %>
