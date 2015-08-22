@@ -150,17 +150,20 @@ Ensuite on faite ```dose.valid?``` => true
  Et donc ```dose.save```
  
  Puis, on va par tester les validations:
+ 
  Cocktails has_many doses
  Maintenant si tt marche, on peut faire ```old.doses``` et on va retrouver un tableau avec qu'une seule dose qui est "beaucoup". On va retrouver depuis le cocktail, les doses associées.
  
  ![old_doses](https://cloud.githubusercontent.com/assets/10654877/9409452/fccc34d6-481a-11e5-9792-2bb224835a2f.jpg)
 
-
+------------------------------------------------------
 
  Ingredients has_many doses
  Et si on prend ```lemon.doses```, on va retrouver la meme.
  
  ![lemon_doses](https://cloud.githubusercontent.com/assets/10654877/9409461/0df4b26a-481b-11e5-8ccb-22f6628c8ab4.jpg)
+ 
+ ------------------------------------------------------
  
  Cocktail has_many ingredients through doses
  ``` old.ingredients ```
@@ -168,11 +171,15 @@ Ensuite on faite ```dose.valid?``` => true
  
  ![old_ingredients](https://cloud.githubusercontent.com/assets/10654877/9409468/1dd0a25c-481b-11e5-8fd4-4b12eb02c34e.jpg)
  
+ ------------------------------------------------------
+ 
  Ingredients has_many cocktails through doses
  ``` lemon.cocktails ```
  => On recupere un tableau avec un seul element qui est le cocktail Old
  
  ![lemon_cocktails](https://cloud.githubusercontent.com/assets/10654877/9409481/3a787588-481b-11e5-9413-d60eaa2001a6.jpg)
+ 
+ ------------------------------------------------------
  
  On a donc tt crash testé afin de voir que nos models fonctionnait bien.
  
